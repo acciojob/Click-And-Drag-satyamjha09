@@ -1,41 +1,32 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const items = document.querySelectorAll(".item");
-    let activeItem = null;
-    let offsetX = 0, offsetY = 0;
+const container = document.getElementById('container');
+        const cubes = document.querySelectorAll('.cube');
+        let selectedCube = null;
+        let offsetX, offsetY;
 
-    items.forEach(item => {
-        item.addEventListener("mousedown", (e) => {
-            activeItem = item;
-            offsetX = e.clientX - item.getBoundingClientRect().left;
-            offsetY = e.clientY - item.getBoundingClientRect().top;
-
-            item.style.position = "absolute";
-            item.style.zIndex = 1000; // Bring to front
-            document.addEventListener("mousemove", onMouseMove);
-            document.addEventListener("mouseup", onMouseUp);
+        cubes.forEach(cube => {
+            cube.addEventListener('mousedown', (e) => {
+                selectedCube = e.target;
+                offsetX = e.clientX - selectedCube.offsetLeft;
+                offsetY = e.clientY - selectedCube.offsetTop;
+                selectedCube.style.cursor = 'grabbing';
+            });
         });
-    });
 
-    function onMouseMove(e) {
-        if (!activeItem) return;
+        document.addEventListener('mousemove', (e) => {
+            if (!selectedCube) return;
+            let newX = e.clientX - offsetX;
+            let newY = e.clientY - offsetY;
+            let maxX = container.offsetWidth - selectedCube.offsetWidth;
+            let maxY = container.offsetHeight - selectedCube.offsetHeight;
+            newX = Math.max(0, Math.min(newX, maxX));
+            newY = Math.max(0, Math.min(newY, maxY));
+            selectedCube.style.left = `${newX}px`;
+            selectedCube.style.top = `${newY}px`;
+        });
 
-        const container = document.querySelector(".items");
-        const rect = container.getBoundingClientRect();
-        
-        let x = e.clientX - offsetX;
-        let y = e.clientY - offsetY;
-
-        // Boundary constraints
-        x = Math.max(rect.left, Math.min(x, rect.right - activeItem.offsetWidth));
-        y = Math.max(rect.top, Math.min(y, rect.bottom - activeItem.offsetHeight));
-
-        activeItem.style.left = `${x}px`;
-        activeItem.style.top = `${y}px`;
-    }
-
-    function onMouseUp() {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        activeItem = null;
-    }
-});
+        document.addEventListener('mouseup', () => {
+            if (selectedCube) {
+                selectedCube.style.cursor = 'grab';
+            }
+            selectedCube = null;
+        });
