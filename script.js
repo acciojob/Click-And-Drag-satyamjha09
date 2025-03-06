@@ -1,32 +1,32 @@
 const container = document.getElementById('container');
-        const cubes = document.querySelectorAll('.cube');
-        let selectedCube = null;
+        const items = document.querySelectorAll('.item');
+        let selectedItem = null;
         let offsetX, offsetY;
 
-        cubes.forEach(cube => {
-            cube.addEventListener('mousedown', (e) => {
-                selectedCube = e.target;
-                offsetX = e.clientX - selectedCube.offsetLeft;
-                offsetY = e.clientY - selectedCube.offsetTop;
-                selectedCube.style.cursor = 'grabbing';
+        items.forEach(item => {
+            item.addEventListener('mousedown', (e) => {
+                selectedItem = e.target;
+                offsetX = e.clientX - selectedItem.offsetLeft;
+                offsetY = e.clientY - selectedItem.offsetTop;
+                selectedItem.style.cursor = 'grabbing';
             });
         });
 
         document.addEventListener('mousemove', (e) => {
-            if (!selectedCube) return;
+            if (!selectedItem) return;
             let newX = e.clientX - offsetX;
             let newY = e.clientY - offsetY;
-            let maxX = container.offsetWidth - selectedCube.offsetWidth;
-            let maxY = container.offsetHeight - selectedCube.offsetHeight;
+            let maxX = container.offsetWidth - selectedItem.offsetWidth;
+            let maxY = container.offsetHeight - selectedItem.offsetHeight;
             newX = Math.max(0, Math.min(newX, maxX));
             newY = Math.max(0, Math.min(newY, maxY));
-            selectedCube.style.left = `${newX}px`;
-            selectedCube.style.top = `${newY}px`;
+            selectedItem.style.left = `${newX}px`;
+            selectedItem.style.top = `${newY}px`;
         });
 
         document.addEventListener('mouseup', () => {
-            if (selectedCube) {
-                selectedCube.style.cursor = 'grab';
+            if (selectedItem) {
+                selectedItem.style.cursor = 'grab';
             }
-            selectedCube = null;
+            selectedItem = null;
         });
