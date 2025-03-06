@@ -1,16 +1,33 @@
 const container = document.getElementById('container');
-        const items = document.querySelectorAll('.item');
         let selectedItem = null;
         let offsetX, offsetY;
 
-        items.forEach(item => {
-            item.addEventListener('mousedown', (e) => {
-                selectedItem = e.target;
-                offsetX = e.clientX - selectedItem.offsetLeft;
-                offsetY = e.clientY - selectedItem.offsetTop;
-                selectedItem.style.cursor = 'grabbing';
-            });
-        });
+        // Function to create grid items
+        function createItems() {
+            let cols = 5;
+            let rows = 5;
+            let itemSize = 50;
+            let gap = 10;
+            let id = 1;
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    let item = document.createElement('div');
+                    item.classList.add('item');
+                    item.textContent = id++;
+                    item.style.left = `${c * (itemSize + gap)}px`;
+                    item.style.top = `${r * (itemSize + gap)}px`;
+                    container.appendChild(item);
+                    
+                    item.addEventListener('mousedown', (e) => {
+                        selectedItem = item;
+                        offsetX = e.clientX - selectedItem.offsetLeft;
+                        offsetY = e.clientY - selectedItem.offsetTop;
+                        selectedItem.style.cursor = 'grabbing';
+                    });
+                }
+            }
+        }
 
         document.addEventListener('mousemove', (e) => {
             if (!selectedItem) return;
@@ -30,3 +47,6 @@ const container = document.getElementById('container');
             }
             selectedItem = null;
         });
+
+        // Generate items on page load
+        createItems();
